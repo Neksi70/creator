@@ -280,8 +280,6 @@ jobs:
           sed -i -e 's|rs-ny.rustdesk.com|${{ inputs.server }}|' ./libs/hbb_common/src/config.rs
           sed -i -e 's|OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=|${{ inputs.key }}|' ./libs/hbb_common/src/config.rs
           sed -i -e 's|https://admin.rustdesk.com|${{ inputs.apiServer }}|' ./src/common.rs
-          # Laufzeit-App-Name (APP_NAME-Konstante) auf den Branding-Namen setzen
-          sed -i -e 's|RwLock::new("RustDesk".to_owned())|RwLock::new("${{ inputs.appname }}".to_owned())|' ./libs/hbb_common/src/config.rs
           # ./flutter/pubspec.yaml
           #sed -i '/intl:/a \ \ archive: ^3.6.1' ./flutter/pubspec.yaml
 
@@ -507,7 +505,7 @@ jobs:
         continue-on-error: true
         shell: bash
         run: |
-          sed -i 's|child: loadLogo(),|child: Column(mainAxisSize: MainAxisSize.min, children: [loadLogo(), const SizedBox(height: 6), Text(bind.mainGetAppNameSync(), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold))]),|' ./flutter/lib/desktop/pages/desktop_home_page.dart
+          sed -i 's|child: loadLogo(),|child: Column(mainAxisSize: MainAxisSize.min, children: [loadLogo(), const SizedBox(height: 6), const Text("V3D Remote", style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold))]),|' ./flutter/lib/desktop/pages/desktop_home_page.dart
 
       - name: disable settings
         continue-on-error: true
