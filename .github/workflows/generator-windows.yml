@@ -498,6 +498,8 @@ jobs:
         run: | 
           sed -i -e 's|updateUrl.isNotEmpty|false|' ./flutter/lib/desktop/pages/desktop_home_page.dart
           sed -i '/let (request, url) =/,/Ok(())/{/Ok(())/!d}' ./src/common.rs
+          # Alle Status-/Upgrade-/Install-Kaertchen abschalten (u.a. "Ihre Version ist veraltet")
+          sed -i 's|Widget buildHelpCards(String updateUrl) {|Widget buildHelpCards(String updateUrl) { return const SizedBox.shrink();|' ./flutter/lib/desktop/pages/desktop_home_page.dart
 
       - name: disable settings
         continue-on-error: true
