@@ -501,6 +501,12 @@ jobs:
           # Alle Status-/Upgrade-/Install-Kaertchen abschalten (u.a. "Ihre Version ist veraltet")
           sed -i 's|Widget buildHelpCards(String updateUrl) {|Widget buildHelpCards(String updateUrl) { return const SizedBox.shrink();|' ./flutter/lib/desktop/pages/desktop_home_page.dart
 
+      - name: show app name under logo
+        continue-on-error: true
+        shell: bash
+        run: |
+          sed -i 's|child: loadLogo(),|child: Column(mainAxisSize: MainAxisSize.min, children: [loadLogo(), const SizedBox(height: 6), Text(bind.mainGetAppNameSync(), style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold))]),|' ./flutter/lib/desktop/pages/desktop_home_page.dart
+
       - name: disable settings
         continue-on-error: true
         run: |
