@@ -744,6 +744,12 @@ jobs:
           New-Item -ItemType Directory -Force -Path ./SignOutput | Out-Null
           pushd ./res/msi
           
+          # preprocess.py startet die EXE ohne Anfuehrungszeichen; bei einem
+          # Leerzeichen im Namen ("V3D Remote.exe") bricht der Aufruf ab.
+          $pp = Get-Content ./preprocess.py -Raw
+          $pp = $pp.Replace('f"{dist_app} {args}"', 'f''"{dist_app}" {args}''')
+          Set-Content ./preprocess.py -Value $pp -NoNewline
+          
           # Try preprocess.py with version parameter
           # App-Name mitgeben: die EXE heisst nach dem Rebranding nicht mehr
           # RustDesk.exe, sonst findet preprocess.py sie nicht (MSI schlug fehl).
