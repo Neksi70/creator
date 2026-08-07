@@ -745,7 +745,9 @@ jobs:
           pushd ./res/msi
           
           # Try preprocess.py with version parameter
-          python preprocess.py --arp -d ../../rustdesk --version ${{ env.VERSION }}
+          # App-Name mitgeben: die EXE heisst nach dem Rebranding nicht mehr
+          # RustDesk.exe, sonst findet preprocess.py sie nicht (MSI schlug fehl).
+          python preprocess.py --arp -d ../../rustdesk --version ${{ env.VERSION }} --app-name "${{ inputs.appname }}" --manufacturer "${{ fromJson(inputs.extras).compname }}"
           if ($LASTEXITCODE -ne 0) {
             echo "preprocess.py failed, will create Config.wxi manually"
           }
@@ -757,11 +759,11 @@ jobs:
             '<?xml version="1.0" encoding="utf-8"?>' | Out-File -FilePath ./Package/Config.wxi -Encoding UTF8
             '<Include>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
             '  <?define Version="${{ env.VERSION }}" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
-            '  <?define Product="RustDesk" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
-            '  <?define Description="RustDesk Remote Desktop" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
-            '  <?define Manufacturer="Purslane Ltd" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
-            '  <?define ProductLower="rustdesk" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
-            '  <?define RegKeyRoot="Software\RustDesk" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
+            '  <?define Product="${{ inputs.appname }}" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
+            '  <?define Description="${{ inputs.appname }} Installer" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
+            '  <?define Manufacturer="${{ fromJson(inputs.extras).compname }}" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
+            '  <?define ProductLower="${{ inputs.filename }}" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
+            '  <?define RegKeyRoot="Software\${{ inputs.appname }}" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
             '  <?define BuildDir="../../rustdesk" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
             '  <?define UpgradeCode="{59C1BC08-0A9A-4A72-8BD4-7B28BD03C00A}" ?>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
             '</Include>' | Out-File -FilePath ./Package/Config.wxi -Append -Encoding UTF8
